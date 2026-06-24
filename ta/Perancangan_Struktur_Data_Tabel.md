@@ -24,7 +24,7 @@ tabel-tabel yang digunakan pada sistem ini dapat dilihat pada tabel berikut.
 | 2 | nama_lengkap | Varchar | 100 | Nama lengkap pengguna |
 | 3 | username | Varchar | 50 | Nama pengguna untuk login |
 | 4 | kata_sandi | Varchar | 255 | Kata sandi pengguna (hash) |
-| 5 | peran | Enum | - | Peran pengguna (pengelola/kasir) |
+| 5 | peran | Enum | - | Peran pengguna (barista/manager) |
 | 6 | aktif | Boolean | - | Status pengguna |
 | 7 | dibuat_pada | DateTime | - | Tanggal pembuatan data |
 
@@ -81,7 +81,7 @@ id_pengguna → Tabel Pengguna
 | No | Nama Field | Tipe Data | Panjang | Keterangan |
 |----|------------|-----------|---------|-----------|
 | 1 | id_pembelian | Integer | 11 | ID pembelian |
-| 2 | id_pengguna | Integer | 11 | ID pengguna (pengelola) |
+| 2 | id_pengguna | Integer | 11 | ID pengguna (barista) |
 | 3 | nomor_pembelian | Varchar | 30 | Nomor nota pembelian |
 | 4 | tanggal_beli | Date | - | Tanggal pembelian |
 | 5 | pemasok | Varchar | 100 | Nama pemasok |
@@ -116,7 +116,7 @@ id_pengguna → Tabel Pengguna
 | No | Nama Field | Tipe Data | Panjang | Keterangan |
 |----|------------|-----------|---------|-----------|
 | 1 | id_penjualan | Integer | 11 | ID penjualan |
-| 2 | id_pengguna | Integer | 11 | ID pengguna (kasir) |
+| 2 | id_pengguna | Integer | 11 | ID pengguna (barista) |
 | 3 | nomor_nota | Varchar | 30 | Nomor nota penjualan |
 | 4 | tanggal_jual | DateTime | - | Tanggal dan waktu transaksi |
 | 5 | total_jual | Decimal | 15,2 | Total harga jual |
@@ -180,9 +180,11 @@ Berikut ini merupakan penjelasan relasi antar tabel pada Aplikasi Penjualan Kasi
 dengan Perhitungan HPP Metode FIFO pada Homwok Coffee :
 
 1. Relasi antara tabel pengguna dengan tabel pembelian yaitu *one to many*,
-   karena satu pengguna dapat menginput lebih dari satu transaksi pembelian.
+   karena satu pengguna (barista) dapat menginput lebih dari satu transaksi
+   pembelian.
 2. Relasi antara tabel pengguna dengan tabel penjualan yaitu *one to many*,
-   karena satu pengguna dapat melakukan lebih dari satu transaksi penjualan.
+   karena satu pengguna (barista) dapat melakukan lebih dari satu transaksi
+   penjualan.
 3. Relasi antara tabel menu dengan tabel resep yaitu *one to many*, karena satu
    menu dapat tersusun atas lebih dari satu bahan baku pada komposisi resep.
 4. Relasi antara tabel bahan_baku dengan tabel resep yaitu *one to many*, karena
