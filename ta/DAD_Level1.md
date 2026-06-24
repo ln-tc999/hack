@@ -1,134 +1,122 @@
 # DAD Level 1
 Aplikasi Penjualan Kasir dengan Perhitungan HPP Metode FIFO — Homwok Coffee
 
-Proses tunggal (0) pada diagram konteks didekomposisi menjadi **5 proses utama**
-dengan **9 simpanan data** (*data store*). Notasi: `data_...` = aliran masukan,
-`daftar_...` / `Laporan_...` = aliran keluaran.
+Disusun mengikuti gaya diagram DAD Level 1 (proses per-pengelolaan data).
+Notasi: `data_...` = masukan dari entitas; `record_...` = aliran ke/dari simpanan
+data; `Laporan_...` / `struk_...` = keluaran.
+
+Caption gambar: **DAD LEVEL 1 APLIKASI PENJUALAN KASIR DENGAN PERHITUNGAN HPP
+METODE FIFO — HOMWOK COFFEE**
 
 ---
 
-## Daftar Proses
+## Entitas Eksternal
+- **BARISTA** — menginput data master, pembelian, dan penjualan.
+- **PELANGGAN** — memberi pesanan dan menerima struk.
+- **MANAGER** — menerima laporan.
 
-| No | Proses | Aktor |
-|----|--------|-------|
-| 1.0 | Autentikasi Pengguna | Barista, Manager |
-| 2.0 | Pengelolaan Data Master | Barista |
-| 3.0 | Pencatatan Pembelian (Lot FIFO) | Barista |
-| 4.0 | Transaksi Penjualan & Perhitungan HPP FIFO | Barista, Pelanggan |
-| 5.0 | Pelaporan | Manager |
+## Proses
+| No | Proses |
+|----|--------|
+| 1 | KELOLA DATA MENU |
+| 2 | KELOLA DATA BAHAN BAKU |
+| 3 | KELOLA DATA RESEP |
+| 4 | KELOLA DATA PEMBELIAN |
+| 5 | KELOLA DATA PENJUALAN |
+| 6 | BUAT LAPORAN |
 
-## Daftar Simpanan Data
-
-| Kode | Simpanan Data |
-|------|---------------|
-| D1 | pengguna |
-| D2 | menu |
-| D3 | bahan_baku |
-| D4 | resep |
-| D5 | pembelian |
-| D6 | detail_pembelian (lot FIFO) |
-| D7 | penjualan |
-| D8 | detail_penjualan |
-| D9 | pemakaian_bahan |
+## Simpanan Data (Data Store)
+MENU, BAHAN_BAKU, RESEP, PEMBELIAN, DETAIL_PEMBELIAN, PENJUALAN,
+DETAIL_PENJUALAN, PEMAKAIAN_BAHAN
 
 ---
 
-## Diagram DAD Level 1
+## Diagram (ASCII)
 
 ```
- BARISTA                                                              MANAGER
-   │                                                                     │
-   │ data_login                                            data_login    │
-   ▼                                                                     ▼
- ┌──────────────────────┐   data_pengguna     ┌──────────────────────────────┐
- │  1.0 Autentikasi     │◄───────────────────►│ D1  pengguna                 │
- │      Pengguna        │                     └──────────────────────────────┘
- └──────────────────────┘
-   │ hak_akses
-   ▼
- ┌──────────────────────┐  data_menu       ┌──────────────┐
- │  2.0 Pengelolaan     │◄────────────────►│ D2  menu     │
- │      Data Master     │  data_bahan_baku ┌──────────────┐
- │      (BARISTA)       │◄────────────────►│ D3 bahan_baku│
- │                      │  data_resep      ┌──────────────┐
- │                      │◄────────────────►│ D4  resep    │
- └──────────────────────┘                  └──────────────┘
+ BARISTA ── data_menu ───────►( 1 KELOLA DATA MENU )── record_menu ──►[ MENU ]
+                                                                          │
+ BARISTA ── data_bahan_baku ─►( 2 KELOLA DATA       )── record_bahan ──►[ BAHAN_BAKU ]
+                              (   BAHAN BAKU         )                     │
+                                                                          │
+ BARISTA ── data_resep ──────►( 3 KELOLA DATA RESEP )                     │
+                                  ▲ record_menu  ◄────────────────────────┤
+                                  ▲ record_bahan ◄────────────────────────┤
+                                  └─ record_resep ──►[ RESEP ]            │
+                                                                          │
+ BARISTA ── data_pembelian ──►( 4 KELOLA DATA       )── record_pembelian ►[ PEMBELIAN ]
+                              (   PEMBELIAN          )── record_detail ───►[ DETAIL_PEMBELIAN ]
+                                  ▲ record_bahan ◄───────────────────────┘   (LOT FIFO)
+                                                                          
+ PELANGGAN ─ data_pesanan ──►( 5 KELOLA DATA        )◄─ record_menu  (baca harga)
+ BARISTA ─── data_penjualan ►(   PENJUALAN          )◄─ record_resep (baca takaran)
+                             (                       )⇄ record_detail_pembelian
+ struk_penjualan ◄───────────(  potong lot FIFO,    )   (potong FIFO, update sisa_qty)
+ nota_penjualan  ◄───────────(  hitung HPP & laba   )── record_jual ──────►[ PENJUALAN ]
+ info_sisa_stok  ◄───────────(                       )── record_detail_jual ►[ DETAIL_PENJUALAN ]
+                             └───────────────────────── record_pemakaian ──►[ PEMAKAIAN_BAHAN ]
 
- ┌──────────────────────┐  data_pembelian  ┌────────────────────┐
- │  3.0 Pencatatan      │─────────────────►│ D5  pembelian      │
- │      Pembelian       │  data_lot        ┌──────────────────────────┐
- │      (BARISTA)       │─────────────────►│ D6 detail_pembelian (LOT)│
- └──────────────────────┘  baca D3 ▲       └──────────────────────────┘
-
- PELANGGAN ── data_pesanan ──►┌─────────────────────────────────────┐
-                              │ 4.0 Transaksi Penjualan &           │ baca_harga ──► D2 menu
- BARISTA ── data_penjualan ──►│     Perhitungan HPP FIFO            │ baca_takaran ─► D4 resep
-                              │                                     │ potong_lot ◄─► D6 detail_pembelian
- struk_penjualan ◄────────────│  - menu → bahan (resep)             │   (update sisa_qty, FIFO)
- nota_penjualan  ◄────────────│  - potong lot FIFO (terlama dulu)   │
- info_sisa_stok  ◄────────────│  - hitung HPP & laba kotor          │
-                              └─────────────────────────────────────┘
-                                  │ simpan         │ simpan        │ simpan
-                                  ▼                ▼               ▼
-                          ┌──────────────┐ ┌───────────────────┐ ┌─────────────────────┐
-                          │ D7 penjualan │ │ D8 detail_penjualan│ │ D9 pemakaian_bahan  │
-                          └──────────────┘ └───────────────────┘ └─────────────────────┘
-
- ┌──────────────────────┐ ◄── baca D5, D6, D7, D8, D9
- │  5.0 Pelaporan       │ ── Laporan_Pembelian ───────────────►  MANAGER
- │                      │ ── Laporan_Penjualan ───────────────►
- │                      │ ── Laporan_Persediaan ──────────────►
- │                      │ ── Laporan_Perputaran_Persediaan ───►
- │                      │ ── Laporan_HPP ─────────────────────►
- │                      │ ── Laporan_Laba_Rugi_Kotor ─────────►
- └──────────────────────┘
+                              ( 6 BUAT LAPORAN )◄── record_pembelian, record_detail_pembelian,
+                                    │                record_jual, record_detail_jual,
+                                    │                record_pemakaian, record_bahan, record_menu
+                                    ▼
+                                MANAGER
+                       daftar_menu, daftar_persediaan,
+                       Laporan_Penjualan, Laporan_Pembelian,
+                       Laporan_Persediaan, Laporan_Perputaran_Persediaan,
+                       Laporan_HPP, Laporan_Laba_Rugi_Kotor
 ```
 
 ---
 
 ## Rincian Aliran Data per Proses
 
-### 1.0 Autentikasi Pengguna
-- Barista / Manager → Proses: `data_login`
-- Proses ⇄ D1 pengguna: verifikasi `data_pengguna`
-- Proses → Barista / Manager: `hak_akses`
+### 1 — KELOLA DATA MENU (Barista)
+- BARISTA → P1: `data_menu`
+- P1 → MENU: `record_menu`
 
-### 2.0 Pengelolaan Data Master (Barista)
-- Barista → Proses: `data_menu`, `data_bahan_baku`, `data_resep`
-- Proses ⇄ D2 menu, D3 bahan_baku, D4 resep: simpan & baca
-- Proses → Barista: `daftar_menu`, `daftar_bahan_baku`, `daftar_resep`
+### 2 — KELOLA DATA BAHAN BAKU (Barista)
+- BARISTA → P2: `data_bahan_baku`
+- P2 → BAHAN_BAKU: `record_bahan_baku`
 
-### 3.0 Pencatatan Pembelian — Lot FIFO (Barista)
-- Barista → Proses: `data_pembelian`
-- Proses → D5 pembelian: simpan header pembelian
-- Proses → D6 detail_pembelian: simpan item sebagai **lot FIFO** (`sisa_qty`)
-- Proses ← D3 bahan_baku: baca data bahan
-- Proses → Barista: `daftar_pembelian`, `daftar_persediaan`
+### 3 — KELOLA DATA RESEP (Barista)
+- BARISTA → P3: `data_resep`
+- MENU → P3: `record_menu` (baca daftar menu)
+- BAHAN_BAKU → P3: `record_bahan_baku` (baca daftar bahan)
+- P3 → RESEP: `record_resep`
 
-### 4.0 Transaksi Penjualan & Perhitungan HPP FIFO (Barista, Pelanggan)
-- Pelanggan → Proses: `data_pesanan`
-- Barista → Proses: `data_penjualan`
-- Proses ← D2 menu: baca harga jual
-- Proses ← D4 resep: baca takaran bahan per menu
-- Proses ⇄ D6 detail_pembelian: **potong lot FIFO** (update `sisa_qty`)
-- Proses → D7 penjualan, D8 detail_penjualan, D9 pemakaian_bahan: simpan
-- Proses → Pelanggan: `struk_penjualan`
-- Proses → Barista: `nota_penjualan`, `info_sisa_stok`
+### 4 — KELOLA DATA PEMBELIAN (Barista)
+- BARISTA → P4: `data_pembelian`
+- BAHAN_BAKU → P4: `record_bahan_baku` (baca bahan)
+- P4 → PEMBELIAN: `record_pembelian` (header nota beli)
+- P4 → DETAIL_PEMBELIAN: `record_detail_pembelian` (**setiap item = lot FIFO**, isi `sisa_qty`)
 
-### 5.0 Pelaporan (Manager)
-- Proses ← D5, D6, D7, D8, D9: baca data
-- Proses → Manager: `Laporan_Pembelian`, `Laporan_Penjualan`,
-  `Laporan_Persediaan`, `Laporan_Perputaran_Persediaan`, `Laporan_HPP`,
-  `Laporan_Laba_Rugi_Kotor`
+### 5 — KELOLA DATA PENJUALAN (Barista, Pelanggan) — INTI FIFO/HPP
+- PELANGGAN → P5: `data_pesanan`
+- BARISTA → P5: `data_penjualan`
+- MENU → P5: `record_menu` (baca harga jual)
+- RESEP → P5: `record_resep` (baca takaran bahan per menu)
+- DETAIL_PEMBELIAN ⇄ P5: `record_detail_pembelian` (**potong lot FIFO terlama dulu, update `sisa_qty`**)
+- P5 → PENJUALAN: `record_jual` (total jual, total HPP, laba kotor)
+- P5 → DETAIL_PENJUALAN: `record_detail_jual`
+- P5 → PEMAKAIAN_BAHAN: `record_pemakaian` (log potongan lot = dasar HPP)
+- P5 → PELANGGAN: `struk_penjualan`
+- P5 → BARISTA: `nota_penjualan`, `info_sisa_stok`
+
+### 6 — BUAT LAPORAN (Manager)
+- Membaca: PEMBELIAN, DETAIL_PEMBELIAN, PENJUALAN, DETAIL_PENJUALAN,
+  PEMAKAIAN_BAHAN, BAHAN_BAKU, MENU
+- P6 → MANAGER: `daftar_menu`, `daftar_persediaan`, `Laporan_Penjualan`,
+  `Laporan_Pembelian`, `Laporan_Persediaan`, `Laporan_Perputaran_Persediaan`,
+  `Laporan_HPP`, `Laporan_Laba_Rugi_Kotor`
 
 ---
 
 ## Keterangan
-
-Proses **4.0** merupakan inti sistem. Ketika satu menu terjual, proses ini
-membaca komposisi resep (D4) untuk menerjemahkan menu menjadi kebutuhan bahan
-baku, lalu memotong kuantitas dari `D6 detail_pembelian` berdasarkan tanggal
-pembelian terlama lebih dahulu (FIFO). Setiap potongan lot dicatat ke
-`D9 pemakaian_bahan` sebagai dasar perhitungan HPP, kemudian total HPP dan laba
-kotor disimpan pada `D7 penjualan`. Seluruh laporan pada proses 5.0 dihasilkan
-secara otomatis dan ditujukan kepada Manager.
+Proses **5 (Kelola Data Penjualan)** merupakan inti sistem. Saat satu menu
+terjual, proses ini membaca komposisi resep (RESEP) untuk menerjemahkan menu
+menjadi kebutuhan bahan baku, lalu memotong kuantitas dari DETAIL_PEMBELIAN
+berdasarkan tanggal pembelian terlama lebih dahulu (FIFO). Setiap potongan lot
+dicatat ke PEMAKAIAN_BAHAN sebagai dasar perhitungan Harga Pokok Penjualan (HPP),
+kemudian total HPP dan laba kotor disimpan pada PENJUALAN. Seluruh laporan pada
+proses 6 dihasilkan otomatis dan ditujukan kepada Manager.
