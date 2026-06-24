@@ -239,14 +239,19 @@ Sisi frontend dibangun menggunakan **React.js**, yaitu pustaka (*library*)
 JavaScript untuk membangun antarmuka pengguna berbasis komponen yang dapat
 digunakan kembali (*reusable components*). React menerapkan konsep *Virtual DOM*
 untuk memperbarui tampilan secara efisien ketika terjadi perubahan data, sehingga
-sesuai untuk antarmuka kasir yang bersifat interaktif dan dinamis.
+sesuai untuk antarmuka kasir yang bersifat interaktif dan dinamis (Naresvari &
+Susetyo, 2025).
 
 Di atas React digunakan **Next.js**, yaitu *framework* React yang menyediakan
 fitur seperti perutean (*routing*), *rendering* sisi server (*server-side
-rendering*), dan optimasi performa secara terstruktur. Next.js dijalankan pada
-lingkungan **Node.js**, yaitu *runtime* JavaScript di sisi server. Frontend ini
-bertugas mengonsumsi REST API dari Laravel untuk menampilkan menu, memproses
-keranjang penjualan, serta menyajikan laporan kepada pengguna.
+rendering*), dan optimasi performa secara terstruktur. Penggunaan Next.js pada
+sisi frontend yang dipadukan dengan Laravel pada sisi backend telah diterapkan
+pada pengembangan sistem informasi berbasis web (Anugerah & Kosasi, 2024).
+Next.js dijalankan pada lingkungan **Node.js**, yaitu *runtime* JavaScript di sisi
+server yang dikenal memiliki performa pemrosesan yang baik untuk aplikasi web
+(Pratama & Raharja, 2023). Frontend ini bertugas mengonsumsi REST API dari
+Laravel untuk menampilkan menu, memproses keranjang penjualan, serta menyajikan
+laporan kepada pengguna.
 
 #### 2.1.7.4 Basis Data MySQL
 
@@ -272,12 +277,23 @@ ke Daftar Pustaka dan pastikan setiap sumber benar-benar dikutip di dalam teks:
   Education.
 - Fielding, R. T. (2000). *Architectural Styles and the Design of Network-based
   Software Architectures* (Disertasi Doktoral). University of California, Irvine.
+- Naresvari, E., & Susetyo, Y. A. (2025). Penerapan JavaScript React pada
+  perancangan front-end website UMKM Jemari Ragil. *IT-Explore: Jurnal Penerapan
+  Teknologi Informasi dan Komunikasi*, 4(1), 16–32.
+- Anugerah, D. A., & Kosasi, S. (2024). Penerapan Next.js dan GraphQL dalam
+  Pengembangan Mobile Web Sistem Informasi Manajemen Puskesmas. *CSRID (Computer
+  Science Research and Its Development Journal)*, 16(3), 247–258.
+- Pratama, I. P. A. E., & Raharja, I. M. S. (2023). Node.js Performance
+  Benchmarking and Analysis at Virtualbox, Docker, and Podman Environment Using
+  Node-Bench Method. *JOIV: International Journal on Informatics Visualization*,
+  7(4), 2240–2246.
 
-> Untuk React.js, Next.js, dan Node.js, rujukan akademik baku masih terbatas
-> sehingga lazim mengandalkan dokumentasi resmi. Verifikasi sitasinya sesuai
-> gaya selingkung kampus Anda (mis. mencantumkan dokumentasi resmi React/Next.js/
-> Node.js dengan tanggal akses), atau cari jurnal yang membahas teknologi
-> tersebut agar lebih kuat secara akademik.
+> Verifikasi mandiri sebelum dipakai: (1) **Anugerah & Kosasi** — tahun terbit
+> perlu Anda pastikan; metadata DOI menunjukkan 2022 sementara volume 16
+> mengindikasikan 2024. Cek langsung di laman jurnal CSRID. (2) Keempat sumber di
+> atas nyata dan terindeks, namun pastikan penulisannya sesuai gaya selingkung
+> kampus Anda. React.js, Next.js, dan Node.js kini sudah memiliki rujukan jurnal
+> (bukan sekadar dokumentasi resmi), sehingga lebih kuat secara akademik.
 
 > Catatan: Weygandt, Kimmel, & Kieso (2019), Romney & Steinbart (2018), serta
 > Pressman & Maxim (2020) sudah ada di Daftar Pustaka Anda — pada draf lama ketiga
