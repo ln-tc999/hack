@@ -196,22 +196,67 @@ perencanaan, pemodelan, konstruksi, dan penyerahan (Pressman & Maxim, 2020).
 
 Arsitektur berbasis web dipilih agar aplikasi dapat dijalankan secara *multi-user*
 dari komputer kasir maupun perangkat genggam pengelola selama terhubung ke
-jaringan. Pengembangan dilakukan dengan menerapkan pola arsitektur
-**Model-View-Controller (MVC)**, yaitu pemisahan tanggung jawab menjadi tiga
-lapisan: *Model* (logika data dan basis data), *View* (antarmuka yang ditampilkan
-ke pengguna), dan *Controller* (logika pengendali yang menghubungkan keduanya).
-Pemisahan ini memudahkan pemeliharaan dan meningkatkan keteraturan kode
-(Pressman & Maxim, 2020). Komponen teknologi yang digunakan meliputi:
+jaringan. Aplikasi ini dikembangkan dengan arsitektur **terpisah (*decoupled*)**
+antara sisi backend dan frontend, sehingga teknologi pendukungnya diuraikan ke
+dalam empat bagian berikut.
 
-1. **PHP (*Hypertext Preprocessor*)** — bahasa pemrograman sisi server
-   (*server-side scripting*) untuk mengeksekusi logika kalkulasi FIFO, pemrosesan
-   transaksi, dan manipulasi data.
-2. **Framework Laravel** — kerangka kerja PHP berbasis pola MVC yang mempercepat
-   pengembangan, meningkatkan keamanan dari celah kerentanan umum, dan menjaga
-   keteraturan struktur kode.
-3. **Basis Data MySQL** — *Relational Database Management System* (RDBMS) untuk
-   menyimpan data master menu, komposisi resep, tabel lot persediaan, serta log
-   riwayat transaksi secara terstruktur (Connolly & Begg, 2015).
+#### 2.1.7.1 Arsitektur Client–Server dan RESTful API
+
+Aplikasi dirancang menggunakan arsitektur *client–server* yang terpisah, di mana
+sisi *backend* (peladen) dan sisi *frontend* (klien) merupakan dua bagian mandiri
+yang berkomunikasi melalui antarmuka pemrograman aplikasi (*Application
+Programming Interface*/API). Gaya arsitektur API yang digunakan adalah
+**Representational State Transfer (REST)**, yaitu pola komunikasi *stateless*
+berbasis protokol HTTP yang mengakses sumber daya (*resource*) melalui *endpoint*
+dengan metode standar seperti GET, POST, PUT, dan DELETE (Fielding, 2000).
+
+Pertukaran data antara backend dan frontend dilakukan dalam format **JSON
+(*JavaScript Object Notation*)**, yaitu format teks ringan yang mudah dibaca
+mesin maupun manusia. Dengan pendekatan ini, logika bisnis (termasuk kalkulasi
+FIFO dan HPP) sepenuhnya berada di sisi backend, sedangkan frontend hanya
+bertugas menampilkan data dan menerima masukan pengguna. Pemisahan ini
+meningkatkan keteraturan, kemudahan pemeliharaan, dan memungkinkan kedua sisi
+dikembangkan secara independen.
+
+#### 2.1.7.2 Laravel dan Pola MVC (Backend/API)
+
+Sisi backend dibangun menggunakan **Laravel**, yaitu kerangka kerja (*framework*)
+berbahasa **PHP (*Hypertext Preprocessor*)** yang menerapkan pola arsitektur
+**Model-View-Controller (MVC)**. Pola MVC memisahkan tanggung jawab menjadi tiga
+lapisan: *Model* (logika data dan interaksi basis data), *Controller* (logika
+pengendali dan aturan bisnis), dan *View* (penyajian keluaran) (Pressman & Maxim,
+2020).
+
+Pada arsitektur *decoupled* ini, peran lapisan *View* tidak lagi berupa halaman
+HTML yang dirender langsung ke pengguna, melainkan digantikan oleh **respons data
+dalam format JSON** yang dikirim melalui REST API. Dengan demikian, Laravel
+berfungsi sebagai penyedia layanan API yang mengeksekusi logika kalkulasi FIFO,
+pemrosesan transaksi penjualan dan pembelian, serta manipulasi data persediaan.
+
+#### 2.1.7.3 React.js dan Next.js (Frontend)
+
+Sisi frontend dibangun menggunakan **React.js**, yaitu pustaka (*library*)
+JavaScript untuk membangun antarmuka pengguna berbasis komponen yang dapat
+digunakan kembali (*reusable components*). React menerapkan konsep *Virtual DOM*
+untuk memperbarui tampilan secara efisien ketika terjadi perubahan data, sehingga
+sesuai untuk antarmuka kasir yang bersifat interaktif dan dinamis.
+
+Di atas React digunakan **Next.js**, yaitu *framework* React yang menyediakan
+fitur seperti perutean (*routing*), *rendering* sisi server (*server-side
+rendering*), dan optimasi performa secara terstruktur. Next.js dijalankan pada
+lingkungan **Node.js**, yaitu *runtime* JavaScript di sisi server. Frontend ini
+bertugas mengonsumsi REST API dari Laravel untuk menampilkan menu, memproses
+keranjang penjualan, serta menyajikan laporan kepada pengguna.
+
+#### 2.1.7.4 Basis Data MySQL
+
+Penyimpanan data menggunakan **MySQL**, yaitu *Relational Database Management
+System* (RDBMS) yang menyimpan data secara terstruktur dalam bentuk tabel yang
+saling berelasi (Connolly & Begg, 2015). MySQL digunakan untuk menyimpan data
+master menu, komposisi resep, data pembelian beserta antrian lot FIFO, data
+penjualan, serta log pemakaian bahan sebagai dasar perhitungan HPP. MySQL diakses
+oleh backend Laravel melalui lapisan *Model* dengan memanfaatkan *Object
+Relational Mapping* (ORM) Eloquent.
 
 ---
 
@@ -225,6 +270,14 @@ ke Daftar Pustaka dan pastikan setiap sumber benar-benar dikutip di dalam teks:
 - Heizer, J., Render, B., & Munson, C. (2020). *Operations Management:
   Sustainability and Supply Chain Management* (13th ed.). Harlow: Pearson
   Education.
+- Fielding, R. T. (2000). *Architectural Styles and the Design of Network-based
+  Software Architectures* (Disertasi Doktoral). University of California, Irvine.
+
+> Untuk React.js, Next.js, dan Node.js, rujukan akademik baku masih terbatas
+> sehingga lazim mengandalkan dokumentasi resmi. Verifikasi sitasinya sesuai
+> gaya selingkung kampus Anda (mis. mencantumkan dokumentasi resmi React/Next.js/
+> Node.js dengan tanggal akses), atau cari jurnal yang membahas teknologi
+> tersebut agar lebih kuat secara akademik.
 
 > Catatan: Weygandt, Kimmel, & Kieso (2019), Romney & Steinbart (2018), serta
 > Pressman & Maxim (2020) sudah ada di Daftar Pustaka Anda — pada draf lama ketiga
