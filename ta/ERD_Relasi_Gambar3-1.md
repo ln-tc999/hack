@@ -13,8 +13,8 @@ draw.io, lalu ekspor sebagai gambar untuk dimasukkan ke dokumen sebagai Gambar 3
 
 ```mermaid
 erDiagram
-    PENGGUNA   ||--o{ PEMBELIAN       : menginput
-    PENGGUNA   ||--o{ PENJUALAN       : melakukan
+    USER   ||--o{ PEMBELIAN       : menginput
+    USER   ||--o{ PENJUALAN       : melakukan
     MENU       ||--o{ RESEP           : memiliki
     BAHAN_BAKU ||--o{ RESEP           : digunakan_pada
     PEMBELIAN  ||--o{ DETAIL_PEMBELIAN: memiliki
@@ -25,8 +25,8 @@ erDiagram
     DETAIL_PEMBELIAN ||--o{ PEMAKAIAN_BAHAN : dipotong
     BAHAN_BAKU       ||--o{ PEMAKAIAN_BAHAN : dipakai
 
-    PENGGUNA {
-        int id_pengguna PK
+    USER {
+        int id_user PK
         varchar nama_lengkap
         varchar username
         varchar kata_sandi
@@ -102,6 +102,8 @@ erDiagram
         decimal harga_beli
         decimal subtotal_hpp
     }
+
+  
 ```
 
 ---
