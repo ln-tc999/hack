@@ -1,21 +1,25 @@
 # DAD Konteks (Level 0)
 Aplikasi Penjualan Kasir dengan Perhitungan HPP Metode FIFO — Homwok Coffee
 
-Mengikuti gaya diagram konteks PT Scala: satu proses pusat (0) dikelilingi entitas
+Mengikuti gaya diagram konteks: satu proses pusat (0) dikelilingi entitas
 eksternal. Aliran `data_...` = masukan ke sistem; `daftar_...` / `Laporan_...` /
-`struk_...` = keluaran dari sistem.
+`nota_...` = keluaran dari sistem.
 
-Entitas eksternal pada sistem ini:
-- **Pelanggan** — memberikan pesanan dan menerima struk penjualan.
+Entitas eksternal pada sistem ini (hanya pengguna sistem):
 - **Barista (Kasir)** — menginput seluruh data operasional (penjualan, pembelian
-  bahan baku, dan data master menu/bahan/resep) serta menerima nota dan informasi
-  sisa stok.
+  bahan baku, dan data master menu/bahan/resep) serta menerima nota/struk,
+  informasi sisa stok, dan daftar persediaan.
 - **Manager** — menerima laporan-laporan, termasuk laporan HPP dan laba rugi
   kotor.
 
+> Catatan: **Pelanggan tidak digambarkan sebagai entitas** karena tidak
+> mengakses sistem dan tidak ada data pelanggan yang disimpan. Pesanan pelanggan
+> dicatat oleh barista sebagai `data_penjualan`, dan struk diserahkan barista
+> kepada pembeli di luar batas sistem.
+
 ---
 
-## Tata Letak (mirip contoh)
+## Tata Letak
 
 ```
                        data_penjualan,
@@ -24,17 +28,12 @@ Entitas eksternal pada sistem ini:
                        data_bahan_baku,
                        data_resep
    ┌───────────────┐ ──────────────────────────►   ┌──────────────────────┐
-   │    BARISTA     │                                │                      │
+   │    BARISTA    │                                │                      │
    │    (KASIR)    │ ◄──────────────────────────    │                      │
-   └───────────────┘   daftar_menu,                 │                      │
-                       nota_penjualan,              │        0             │
-                       info_sisa_stok,             │  SISTEM POS HPP      │
-                       daftar_persediaan            │  FIFO HOMWOK COFFEE  │
-                                                     │                      │
-   ┌───────────────┐  data_pesanan                  │                      │
-   │   PELANGGAN   │ ──────────────────────────►    │                      │
-   │               │ ◄──────────────────────────    │                      │
-   └───────────────┘   struk_penjualan              │                      │
+   └───────────────┘   daftar_menu,                 │        0             │
+                       nota_penjualan (struk),      │  SISTEM POS HPP      │
+                       info_sisa_stok,              │  FIFO HOMWOK COFFEE  │
+                       daftar_persediaan            │                      │
                                                      │                      │
                           Laporan_Penjualan,        │                      │
                           Laporan_Pembelian,        │                      │
@@ -48,8 +47,8 @@ Entitas eksternal pada sistem ini:
    └───────────────┘
 ```
 
-> Catatan tata letak: posisikan **Barista (Kasir)** di kiri-atas, **Pelanggan**
-> di kiri-bawah, dan **Manager** di kanan-bawah. Proses 0 berada di tengah.
+> Catatan tata letak: posisikan **Barista (Kasir)** di kiri-atas dan **Manager**
+> di kiri-bawah. Proses 0 berada di tengah.
 
 ---
 
@@ -65,16 +64,9 @@ Entitas eksternal pada sistem ini:
 
 **Keluaran (Sistem → Barista):**
 - daftar_menu
-- nota_penjualan
+- nota_penjualan (struk)
 - info_sisa_stok
 - daftar_persediaan
-
-### Entitas PELANGGAN
-**Masukan (Pelanggan → Sistem):**
-- data_pesanan
-
-**Keluaran (Sistem → Pelanggan):**
-- struk_penjualan
 
 ### Entitas MANAGER (penerima laporan)
 **Keluaran (Sistem → Manager):**
@@ -91,9 +83,9 @@ Entitas eksternal pada sistem ini:
 Caption gambar: **DAD KONTEKS (LEVEL 0) SISTEM POS HPP FIFO HOMWOK COFFEE**
 
 Diagram ini menggambarkan keseluruhan sistem sebagai satu proses tunggal (0) yang
-berinteraksi dengan tiga entitas eksternal. Pelanggan memberikan pesanan dan
-menerima struk penjualan. Barista (Kasir) bertugas menginput seluruh data
-operasional—mulai dari data master (menu, bahan baku, resep), data pembelian
-bahan baku, hingga data penjualan—serta menerima nota dan informasi sisa stok.
-Manager menerima berbagai laporan, termasuk laporan Harga Pokok Penjualan (HPP)
-dan laporan laba rugi kotor yang dihitung otomatis menggunakan metode FIFO.
+berinteraksi dengan dua entitas eksternal. Barista (Kasir) bertugas menginput
+seluruh data operasional—mulai dari data master (menu, bahan baku, resep), data
+pembelian bahan baku, hingga data penjualan—serta menerima nota/struk dan
+informasi sisa stok. Manager menerima berbagai laporan, termasuk laporan Harga
+Pokok Penjualan (HPP) dan laporan laba rugi kotor yang dihitung otomatis
+menggunakan metode FIFO.

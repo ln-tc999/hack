@@ -11,9 +11,12 @@ METODE FIFO — HOMWOK COFFEE**
 ---
 
 ## Entitas Eksternal
-- **BARISTA** — menginput data master, pembelian, dan penjualan.
-- **PELANGGAN** — memberi pesanan dan menerima struk.
+- **BARISTA** — menginput data master, pembelian, dan penjualan; menerima
+  nota/struk dan informasi sisa stok.
 - **MANAGER** — menerima laporan.
+
+> Pelanggan tidak digambarkan sebagai entitas: pesanannya dicatat barista sebagai
+> `data_penjualan`, dan struk diserahkan barista di luar batas sistem.
 
 ## Proses
 | No | Proses |
@@ -48,11 +51,11 @@ DETAIL_PENJUALAN, PEMAKAIAN_BAHAN
                               (   PEMBELIAN          )── record_detail ───►[ DETAIL_PEMBELIAN ]
                                   ▲ record_bahan ◄───────────────────────┘   (LOT FIFO)
                                                                           
- PELANGGAN ─ data_pesanan ──►( 5 KELOLA DATA        )◄─ record_menu  (baca harga)
- BARISTA ─── data_penjualan ►(   PENJUALAN          )◄─ record_resep (baca takaran)
+ BARISTA ─── data_penjualan ►( 5 KELOLA DATA        )◄─ record_menu  (baca harga)
+                             (   PENJUALAN          )◄─ record_resep (baca takaran)
                              (                       )⇄ record_detail_pembelian
- struk_penjualan ◄───────────(  potong lot FIFO,    )   (potong FIFO, update sisa_qty)
- nota_penjualan  ◄───────────(  hitung HPP & laba   )── record_jual ──────►[ PENJUALAN ]
+ nota_penjualan  ◄───────────(  potong lot FIFO,    )   (potong FIFO, update sisa_qty)
+ (struk)         ◄───────────(  hitung HPP & laba   )── record_jual ──────►[ PENJUALAN ]
  info_sisa_stok  ◄───────────(                       )── record_detail_jual ►[ DETAIL_PENJUALAN ]
                              └───────────────────────── record_pemakaian ──►[ PEMAKAIAN_BAHAN ]
 
@@ -91,17 +94,15 @@ DETAIL_PENJUALAN, PEMAKAIAN_BAHAN
 - P4 → PEMBELIAN: `record_pembelian` (header nota beli)
 - P4 → DETAIL_PEMBELIAN: `record_detail_pembelian` (**setiap item = lot FIFO**, isi `sisa_qty`)
 
-### 5 — KELOLA DATA PENJUALAN (Barista, Pelanggan) — INTI FIFO/HPP
-- PELANGGAN → P5: `data_pesanan`
-- BARISTA → P5: `data_penjualan`
+### 5 — KELOLA DATA PENJUALAN (Barista) — INTI FIFO/HPP
+- BARISTA → P5: `data_penjualan` (barista mencatat pesanan pelanggan)
 - MENU → P5: `record_menu` (baca harga jual)
 - RESEP → P5: `record_resep` (baca takaran bahan per menu)
 - DETAIL_PEMBELIAN ⇄ P5: `record_detail_pembelian` (**potong lot FIFO terlama dulu, update `sisa_qty`**)
 - P5 → PENJUALAN: `record_jual` (total jual, total HPP, laba kotor)
 - P5 → DETAIL_PENJUALAN: `record_detail_jual`
 - P5 → PEMAKAIAN_BAHAN: `record_pemakaian` (log potongan lot = dasar HPP)
-- P5 → PELANGGAN: `struk_penjualan`
-- P5 → BARISTA: `nota_penjualan`, `info_sisa_stok`
+- P5 → BARISTA: `nota_penjualan` (struk), `info_sisa_stok`
 
 ### 6 — BUAT LAPORAN (Manager)
 - Membaca: PEMBELIAN, DETAIL_PEMBELIAN, PENJUALAN, DETAIL_PENJUALAN,

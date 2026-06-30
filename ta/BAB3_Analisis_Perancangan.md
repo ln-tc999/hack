@@ -32,16 +32,19 @@ pada setiap transaksi tanpa perhitungan manual.
 Sistem dibangun dengan **arsitektur terpisah (*decoupled*)**: sisi *backend*
 menggunakan *framework* **Laravel** yang berperan sebagai penyedia layanan
 **REST API**, sedangkan sisi *frontend* menggunakan **Next.js (React)**.
-Penyimpanan data menggunakan basis data **MySQL**. Terdapat tiga pihak yang
+Penyimpanan data menggunakan basis data **MySQL**. Terdapat dua pengguna yang
 berinteraksi dengan sistem:
 
 - **Barista (Kasir)** — pengguna utama yang menginput seluruh data operasional,
   meliputi data master (menu, bahan baku, resep, pegawai), pencatatan pembelian
-  bahan baku, hingga transaksi penjualan.
+  bahan baku, hingga transaksi penjualan; serta menerima nota/struk dan informasi
+  sisa stok.
 - **Manager** — menerima dan menelaah laporan yang dihasilkan sistem, termasuk
   laporan HPP dan laba rugi kotor.
-- **Pelanggan** — memberikan pesanan kepada barista dan menerima struk penjualan;
-  pelanggan tidak mengakses sistem secara langsung.
+
+Pelanggan tidak mengakses sistem secara langsung dan datanya tidak disimpan.
+Pesanan pelanggan dicatat oleh barista sebagai transaksi penjualan, dan struk
+diserahkan barista kepada pembeli di luar batas sistem.
 
 ---
 
@@ -207,10 +210,11 @@ Antar Tabel di berkas struktur data.
 #### DAD Level 0 (Diagram Konteks)
 
 DAD Level 0 menggambarkan sistem sebagai satu proses tunggal yang berinteraksi
-dengan tiga entitas eksternal: **Barista (Kasir)**, **Pelanggan**, dan
-**Manager**. Barista menginput seluruh data operasional dan menerima nota serta
-informasi sisa stok; Pelanggan memberikan pesanan dan menerima struk; Manager
-menerima laporan-laporan termasuk laporan HPP dan laba rugi kotor. Diagram
+dengan dua entitas eksternal: **Barista (Kasir)** dan **Manager**. Barista
+menginput seluruh data operasional (data master, pembelian, dan penjualan) serta
+menerima nota/struk dan informasi sisa stok; Manager menerima laporan-laporan
+termasuk laporan HPP dan laba rugi kotor. Pelanggan tidak digambarkan sebagai
+entitas karena tidak mengakses sistem dan datanya tidak disimpan. Diagram
 ditunjukkan pada **Gambar 3.3** (lihat berkas `DAD_Level0_Konteks.md`).
 
 #### DAD Level 1
