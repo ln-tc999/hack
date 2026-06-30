@@ -13,19 +13,19 @@ tabel-tabel yang digunakan pada sistem ini dapat dilihat pada tabel berikut.
 > Catatan: penomoran tabel (Tabel 3.5 dst.) mengikuti gaya contoh. Sesuaikan
 > dengan urutan tabel pada BAB III dokumen Anda.
 
-## Tabel Pengguna
-**Primary Key** : id_pengguna
+## Tabel Pegawai
+**Primary Key** : id_pegawai
 
-**Tabel 3.5 Struktur Data Tabel Pengguna**
+**Tabel 3.5 Struktur Data Tabel Pegawai**
 
 | No | Nama Field | Tipe Data | Panjang | Keterangan |
 |----|------------|-----------|---------|-----------|
-| 1 | id_pengguna | Integer | 11 | ID pengguna |
-| 2 | nama_lengkap | Varchar | 100 | Nama lengkap pengguna |
-| 3 | username | Varchar | 50 | Nama pengguna untuk login |
-| 4 | kata_sandi | Varchar | 255 | Kata sandi pengguna (hash) |
-| 5 | peran | Enum | - | Peran pengguna (barista/manager) |
-| 6 | aktif | Boolean | - | Status pengguna |
+| 1 | id_pegawai | Integer | 11 | ID pegawai |
+| 2 | nama_lengkap | Varchar | 100 | Nama lengkap pegawai |
+| 3 | username | Varchar | 50 | Nama akun untuk login |
+| 4 | kata_sandi | Varchar | 255 | Kata sandi pegawai (hash) |
+| 5 | peran | Enum | - | Peran pegawai (barista/manager) |
+| 6 | aktif | Boolean | - | Status pegawai (aktif/non-aktif) |
 | 7 | dibuat_pada | DateTime | - | Tanggal pembuatan data |
 
 ## Tabel Menu
@@ -74,14 +74,14 @@ id_bahan → Tabel Bahan Baku
 ## Tabel Pembelian
 **Primary Key** : id_pembelian
 **Foreign Key** :
-id_pengguna → Tabel Pengguna
+id_pegawai → Tabel Pegawai
 
 **Tabel 3.9 Struktur Data Tabel Pembelian**
 
 | No | Nama Field | Tipe Data | Panjang | Keterangan |
 |----|------------|-----------|---------|-----------|
 | 1 | id_pembelian | Integer | 11 | ID pembelian |
-| 2 | id_pengguna | Integer | 11 | ID pengguna (barista) |
+| 2 | id_pegawai | Integer | 11 | ID pegawai (barista) |
 | 3 | nomor_pembelian | Varchar | 30 | Nomor nota pembelian |
 | 4 | tanggal_beli | Date | - | Tanggal pembelian |
 | 5 | pemasok | Varchar | 100 | Nama pemasok |
@@ -109,14 +109,14 @@ id_bahan → Tabel Bahan Baku
 ## Tabel Penjualan
 **Primary Key** : id_penjualan
 **Foreign Key** :
-id_pengguna → Tabel Pengguna
+id_pegawai → Tabel Pegawai
 
 **Tabel 3.11 Struktur Data Tabel Penjualan**
 
 | No | Nama Field | Tipe Data | Panjang | Keterangan |
 |----|------------|-----------|---------|-----------|
 | 1 | id_penjualan | Integer | 11 | ID penjualan |
-| 2 | id_pengguna | Integer | 11 | ID pengguna (barista) |
+| 2 | id_pegawai | Integer | 11 | ID pegawai (barista) |
 | 3 | nomor_nota | Varchar | 30 | Nomor nota penjualan |
 | 4 | tanggal_jual | DateTime | - | Tanggal dan waktu transaksi |
 | 5 | total_jual | Decimal | 15,2 | Total harga jual |
@@ -179,11 +179,11 @@ Relasi Tamu / Foreign Key (\*\*)
 Berikut ini merupakan penjelasan relasi antar tabel pada Aplikasi Penjualan Kasir
 dengan Perhitungan HPP Metode FIFO pada Homwok Coffee :
 
-1. Relasi antara tabel pengguna dengan tabel pembelian yaitu *one to many*,
-   karena satu pengguna (barista) dapat menginput lebih dari satu transaksi
+1. Relasi antara tabel pegawai dengan tabel pembelian yaitu *one to many*,
+   karena satu pegawai (barista) dapat menginput lebih dari satu transaksi
    pembelian.
-2. Relasi antara tabel pengguna dengan tabel penjualan yaitu *one to many*,
-   karena satu pengguna (barista) dapat melakukan lebih dari satu transaksi
+2. Relasi antara tabel pegawai dengan tabel penjualan yaitu *one to many*,
+   karena satu pegawai (barista) dapat melakukan lebih dari satu transaksi
    penjualan.
 3. Relasi antara tabel menu dengan tabel resep yaitu *one to many*, karena satu
    menu dapat tersusun atas lebih dari satu bahan baku pada komposisi resep.

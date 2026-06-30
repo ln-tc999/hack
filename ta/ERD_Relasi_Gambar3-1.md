@@ -13,8 +13,8 @@ draw.io, lalu ekspor sebagai gambar untuk dimasukkan ke dokumen sebagai Gambar 3
 
 ```mermaid
 erDiagram
-    USER   ||--o{ PEMBELIAN       : menginput
-    USER   ||--o{ PENJUALAN       : melakukan
+    PEGAWAI   ||--o{ PEMBELIAN       : menginput
+    PEGAWAI   ||--o{ PENJUALAN       : melakukan
     MENU       ||--o{ RESEP           : memiliki
     BAHAN_BAKU ||--o{ RESEP           : digunakan_pada
     PEMBELIAN  ||--o{ DETAIL_PEMBELIAN: memiliki
@@ -25,8 +25,8 @@ erDiagram
     DETAIL_PEMBELIAN ||--o{ PEMAKAIAN_BAHAN : dipotong
     BAHAN_BAKU       ||--o{ PEMAKAIAN_BAHAN : dipakai
 
-    USER {
-        int id_user PK
+    PEGAWAI {
+        int id_pegawai PK
         varchar nama_lengkap
         varchar username
         varchar kata_sandi
@@ -58,7 +58,7 @@ erDiagram
     }
     PEMBELIAN {
         int id_pembelian PK
-        int id_pengguna FK
+        int id_pegawai FK
         varchar nomor_pembelian
         date tanggal_beli
         varchar pemasok
@@ -76,7 +76,7 @@ erDiagram
     }
     PENJUALAN {
         int id_penjualan PK
-        int id_pengguna FK
+        int id_pegawai FK
         varchar nomor_nota
         datetime tanggal_jual
         decimal total_jual
@@ -112,8 +112,8 @@ erDiagram
 
 ```
         ┌─────────────────┐
-        │    PENGGUNA     │
-        │  id_pengguna *  │
+        │    PEGAWAI     │
+        │  id_pegawai *  │
         └───────┬─────────┘
          1      │      1
       ┌─────────┴──────────┐
@@ -121,7 +121,7 @@ erDiagram
 ┌─────▼────────┐    ┌──────▼────────┐
 │  PEMBELIAN   │    │   PENJUALAN   │
 │ id_pembelian*│    │ id_penjualan* │
-│ id_pengguna**│    │ id_pengguna** │
+│ id_pegawai**│    │ id_pegawai** │
 └─────┬────────┘    └──────┬────────┘
       │ 1                  │ 1
       │ N                  │ N
@@ -159,8 +159,8 @@ Keterangan: `*` = Primary Key, `**` = Foreign Key.
 
 | No | Relasi | Kardinalitas |
 |----|--------|--------------|
-| 1 | pengguna → pembelian | 1 : N |
-| 2 | pengguna → penjualan | 1 : N |
+| 1 | pegawai → pembelian | 1 : N |
+| 2 | pegawai → penjualan | 1 : N |
 | 3 | menu → resep | 1 : N |
 | 4 | bahan_baku → resep | 1 : N |
 | 5 | pembelian → detail_pembelian | 1 : N |
